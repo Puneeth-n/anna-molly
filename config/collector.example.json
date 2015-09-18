@@ -3,24 +3,7 @@
     "blacklist": [
       "MX",
       "osys.*"
-    ],
-    "whitelist": {
-      ".*": [
-        {
-          "RedisTimeStamped": {
-            "ttl": 10000
-          }
-        }
-      ],
-      ".cpu*": [
-        {
-          "RedisIntervalTimeStamped": {
-            "ttl": 1000,
-            "interval": 300
-          }
-        }
-      ]
-    }
+    ]
   },
   "writer": {
     "RedisSink": {

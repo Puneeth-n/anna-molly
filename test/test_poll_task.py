@@ -39,7 +39,7 @@ class TestPollTask(object):
                 self.test_poll_task = poll_task.PollTask(config=analyzer, logger=None, options={'name': plugin_name})
                 self.test_poll_task.should.have.property('plugin_name').being.equal(plugin_name)
                 self.test_poll_task.should.have.property('plugin').being.equal(plugin)
-                config = services[plugin_name]['worker_options']
+                config = services[plugin_name]['service_options']
                 params = {
                     'service': config.keys()[0],
                     'params': config.values()[0]

@@ -22,7 +22,7 @@ class TukeysFilter(BaseTask):
     def read(self):
         quantile_25 = self.params['quantile_25']
         quantile_75 = self.params['quantile_75']
-        metrics = self.params['metrics']
+        metrics = self.params['metric']
         delay = self.params.get('offset', 0)
         maximum_delay = self.params.get('maximum_delay', 600)
 

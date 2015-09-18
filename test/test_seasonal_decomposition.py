@@ -16,7 +16,7 @@ from fixtures.config import services, analyzer
 
 class TestSeasonalDecomposition(object):
     def __init__(self):
-        self.config = services['SeasonalDecomposition']['worker_options']
+        self.config = services['SeasonalDecomposition']['service_options']
 
     def setUp(self):
         base_task.sink = Mock()

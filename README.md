@@ -241,7 +241,7 @@ Plugins push the result data into the OutputSink.
         "name": "TukeysFilter"
       }
     },
-    "worker_options": {
+    "service_options": {
       "service1": {}
     }
   }
@@ -256,7 +256,7 @@ Each key in the `services.json` file defines an algorithm that will run (here `T
     - **interval_secs** - how often the tasks should run
     - **plugin_args** - arguments for the Poll Task
       - name - Mandatory plugin name.
-- **worker_options** - options for the each Task Runner
+- **service_options** - options for the each Task Runner
 
 ## Algorithms
 

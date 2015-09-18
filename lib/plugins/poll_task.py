@@ -18,7 +18,7 @@ class PollTask(BaseTask):
     def run(self):
         try:
             algo_config = config_loader.load(os.path.join(os.path.dirname(__file__), '../../config/services.json'))
-            algo_config = algo_config.get(self.plugin_name)['worker_options']
+            algo_config = algo_config.get(self.plugin_name)['service_options']
         except AttributeError:
             return None
         for service, options in algo_config.iteritems():

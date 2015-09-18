@@ -14,7 +14,7 @@ class TestCollector(object):
 
     @classmethod
     def setUpAll(cls):
-        options = Mock(**{'config': './collector.json'})
+        options = Mock(**{'collector_config': './collector.json', 'services_config': './services.json'})
         collector.setup(options)
 
     def setUp(self):
@@ -23,7 +23,7 @@ class TestCollector(object):
     # process
 
     def test_collector_process_accepts_whitelisted_and_not_blacklisted_metrics(self):
-        collector.process(self.writer, TimeSeriesTuple('host.ip.127-0-0-1.serv1.cpu.avg', 1, 1))
+        collector.process(self.writer, TimeSeriesTuple('cpu', 1, 1))
         self.writer.write.called.should.be.true
 
     def test_collector_process_ignores_not_whitelisted_metrics(self):
@@ -33,3 +33,9 @@ class TestCollector(object):
     def test_collector_process_ignores_whitelisted_but_blacklisted_metrics(self):
         collector.process(self.writer, TimeSeriesTuple('host.ip.127-0-0-1.serv1.cpu_crit.avg', 1, 1))
         self.writer.write.called.should.be.false
+
+    def test_collector_process_accepts_whitelisted_and_not_blacklisted_FlowDifference_metrics(self):
+        collector.process(self.writer, TimeSeriesTuple('service1.out', 1, 1))
+        self.writer.write.called.should.be.true
+        collector.process(self.writer, TimeSeriesTuple('service2.in', 1, 1))
+        self.writer.write.called.should.be.true

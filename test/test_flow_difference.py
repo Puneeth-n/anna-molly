@@ -14,7 +14,7 @@ from fixtures.config import services, analyzer
 
 class TestFlowDifference(object):
     def __init__(self):
-        self.config = services['FlowDifference']['worker_options']
+        self.config = services['FlowDifference']['service_options']
 
     def setUp(self):
         base_task.sink = Mock()

@@ -20,13 +20,31 @@ app.add_option("--listener", default="CarbonAsyncTcpSpout",
                help="Select the incoming metric connection interface")
 app.add_option("--writer", default="RedisSink",
                help="Select the sink connection interface")
-app.add_option("--config", help="Collector Config")
+app.add_option("--collector_config", help="Collector Config")
+app.add_option("--services_config", help="Services Config")
 
 # Globals
 EE = event_emitter_2.EventEmitter2()
-CONFIG = None
 WHITELIST = None
 BLACKLIST = None
+
+def __generate_whitelist(options):
+    """This function generates the whitelist for the collector. Essentially,
+    all the metrics in services.json are to be collected by the collector.
+
+       :param options: app options
+    """
+    SERVICES = config.load(options.services_config)
+    WHITELIST = dict()
+    for plugin, opts in SERVICES.iteritems():
+        for _, params in opts['service_options'].iteritems():
+            if plugin == 'FlowDifference':
+                WHITELIST[params['in_metric']] = params['model']
+                WHITELIST[params['out_metric']] = params['model']
+            else:
+                WHITELIST[params['metric']] = params['model']
+
+    return WHITELIST
 
 def setup(options):
     """Load the config file and add listeners for whitelisted metrics.
@@ -34,8 +52,8 @@ def setup(options):
        :param options: app options
     """
     global WHITELIST, BLACKLIST
-    CONFIG = config.load(options.config)
-    WHITELIST = CONFIG['router']['whitelist']
+    CONFIG = config.load(options.collector_config)
+    WHITELIST = __generate_whitelist(options)
     log.debug("Whitelist: %s" % (WHITELIST))
     BLACKLIST = [re.compile(x) for x in CONFIG['router']['blacklist']]
     log.debug("Blacklist: %s" % (BLACKLIST))
@@ -61,9 +79,10 @@ def process(writer, metric):
     for m in EE.emit(metric.name, {"datapoint": metric}):
         writer.write([m])
 
-
 def main(args, options):
     config = setup(options)
+    print config
+    exit(0)
     try:
         writer = config['writer'][options.writer]
         log.debug("Connecting to %s writer @ %s" % (options.writer, writer))

@@ -6,15 +6,22 @@
         "name": "TukeysFilter"
       }
     },
-    "worker_options": {
+    "service_options": {
       "service1": {
         "quantile_25": "service.quartil_25",
         "quantile_75": "service.quartil_75",
         "iqr_scaling": 2,
-        "metrics": "system.*",
+        "metric": "system.*",
         "default": 0,
         "offset": 60,
-        "maximum_delay": 900
+        "maximum_delay": 900,
+        "model": [
+          {
+            "RedisTimeStamped": {
+              "ttl": 10000
+            }
+          }
+        ]
       }
     }
   },
@@ -25,7 +32,7 @@
         "name": "SeasonalDecomposition"
       }
     },
-    "worker_options": {
+    "service_options": {
       "stl_service1": {
         "metric": "system.loadavg",
         "period_length": 6,
@@ -36,7 +43,15 @@
           "alpha": 0.01,
           "minimal_upper_threshold": 0.1,
           "minimal_lower_threshold": -0.1
-        }
+       },
+       "model": [
+          {
+            "RedisIntervalTimeStamped": {
+              "ttl": 10000,
+              "interval": 300
+            }
+          }
+       ]
       }
     }
   },
@@ -47,9 +62,9 @@
         "name": "SeasonalDecompositionEnsemble"
       }
     },
-    "worker_options": {
+    "service_options": {
       "stle_service1": {
-        "metric": "system.loadavg",
+        "metric": "system.loadavg_*",
         "period_length": 6,
         "seasons": 2,
         "interval": 10,
@@ -58,7 +73,15 @@
           "minimal_upper_threshold": 0.1,
           "minimal_lower_threshold": -0.1,
           "treshold": 2
-        }
+        },
+       "model": [
+          {
+            "RedisIntervalTimeStamped": {
+              "ttl": 10000,
+              "interval": 300
+            }
+          }
+       ]
       }
     }
   },
@@ -69,7 +92,7 @@
         "name": "FlowDifference"
       }
     },
-    "worker_options": {
+    "service_options": {
       "fd_service1": {
         "in_metric": "service1.out",
         "out_metric": "service2.in",
@@ -78,7 +101,15 @@
           "scaling": 2,
           "minimal_upper_threshold": 0.1,
           "minimal_lower_threshold": -0.1
-        }
+        },
+       "model": [
+          {
+            "RedisIntervalTimeStamped": {
+              "ttl": 10000,
+              "interval": 300
+            }
+          }
+       ]
       }
     }
   }

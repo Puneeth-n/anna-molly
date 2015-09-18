@@ -50,11 +50,17 @@ services = {
                 'name': 'TukeysFilter'
             }
         },
-        'worker_options': {
+        'service_options': {
             'service1': {
-                'options': {
-                    'quantile_25': 'service.quartil_25'
-                }
+                'metric': 'cpu',
+                'quantile_25': 'service.quartil_25',
+                "model": [
+                    {
+                        "RedisTimeStamped": {
+                            "ttl": 10000
+                        }
+                    }
+                ]
             }
         }
     },
@@ -65,13 +71,21 @@ services = {
                 'name': 'SeasonalDecomposition'
             }
         },
-        'worker_options': {
+        'service_options': {
             'stl_service1': {
                 'metric': 'cpu',
                 'period_length': 3,
                 'seasons': 2,
                 'interval': 1,
-                'error_params': {}
+                'error_params': {},
+                "model": [
+                    {
+                        "RedisIntervalTimeStamped": {
+                            "ttl": 10000,
+                            "interval": 300
+                        }
+                    }
+                ]
             }
         }
     },
@@ -82,13 +96,21 @@ services = {
                 'name': 'SeasonalDecompositionEnsemble'
             }
         },
-        'worker_options': {
+        'service_options': {
             'stle_service1': {
                 'metric': 'cpu',
                 'period_length': 3,
                 'seasons': 2,
                 'interval': 1,
-                'error_params': {}
+                'error_params': {},
+                "model": [
+                    {
+                        "RedisIntervalTimeStamped": {
+                            "ttl": 10000,
+                            "interval": 300
+                        }
+                    }
+                ]
             }
         }
     },
@@ -99,24 +121,27 @@ services = {
                 'name': 'FlowDifference'
             }
         },
-        'worker_options': {
+        'service_options': {
             'flow_service1': {
                 'in_metric': 'service1.out',
                 'out_metric': 'service2.in',
                 'stale': 10,
-                'error_params': {}
+                'error_params': {},
+                "model": [
+                    {
+                        "RedisIntervalTimeStamped": {
+                            "ttl": 10000,
+                            "interval": 300
+                        }
+                    }
+                ]
             }
         }
-    },
+    }
 }
 
 collector = {
     'router': {
-        'blacklist': ['.*_crit.*'],
-        'whitelist': {
-            'host.ip.*serv1.*cpu.*': [{
-                'RedisTimeStamped': {'ttl': 10}
-            }]
-        }
+        'blacklist': ['.*_crit.*']
     }
 }
